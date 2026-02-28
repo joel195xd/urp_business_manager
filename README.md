@@ -1,60 +1,66 @@
-# 💎 URP - Business Administration Panel
+# 📋 Guía de Instalación y Uso: URP Masterjob Admin
 
-A high-fidelity, glassmorphism-based dashboard designed specifically for the `origen_masterjob` system in FiveM. This interface provides administrators with a powerful tool to oversee, rename, and manage businesses within the server economy.
-
-## 📜 Legal Notice & Distribution
-> [!WARNING]
-> **RESTRICTED DISTRIBUTION**: This software is licensed for exclusive use within the **URP** community and designated servers. 
-> 
-> - **Redistribution**: Prohibited. You may not re-upload, share, or sell this code in any marketplace or public forum.
-> - **Modification**: Allowed for internal server use only.
-> - **Reverse Engineering**: Prohibited for the purpose of cloning or reselling.
-> 
-> Failure to comply with these terms may result in legal action or restriction of services.
-
-## 🚀 Key Features
-- **URP Exact Design System**: High-end visuals using `backdrop-filter` and premium color palettes.
-- **Magenta Grid System**: Visual grid alignment for that signature URP aesthetic.
-- **Multi-Language Support**: Fully localized in **English** and **Spanish**.
-- **Real-Time Integration**: Designed to work with NUI messages and FiveM exports.
-- **Search & Filtering**: Instantly find any business by label or unique ID.
-- **Administrative Actions**: Quick Edit and Permanent Delete functionalities with safety confirmations.
-
-## 🛠️ Installation & Setup
-1. Download or clone this repository into your `resources/` folder.
-2. Rename the folder to `urp_business_manager` (optional but recommended).
-3. Add the following to your `server.cfg`:
-   ```cfg
-   ensure urp_business_manager
-   ```
-4. Configure the settings in `config.lua` to match your server needs.
-
-## ⚙️ Configuration
-The system uses a centralized Lua configuration file (`config.lua`) for server-side control:
-
-```lua
-Config.Locale = 'es' -- 'en' or 'es'
-Config.Visuals = {
-    ShowGrid = true,
-    BlurIntensity = '10px'
-}
-```
-
-## 👨‍💻 For Developers
-The codebase is documented professionally to allow easy modification:
-- `ui/script.js`: Core interaction logic. Handles NUI messages and DOM manipulation.
-- `ui/style.css`: The "URP Exact Design System". Edit CSS variables here.
-- `ui/locales/`: Contains translation JSON-like objects for easy language additions.
-
-### Integration with `origen_masterjob`
-This panel is designed to bridge with `origen_masterjob` exports. Example trigger:
-```lua
--- How to send data to UI
-SendNUIMessage({
-    action = 'setBusinesses',
-    list = businesses_data -- Array of objects matching sql schema
-})
-```
+¡Bienvenido al Panel de Administración de Negocios! Este script es una extensión potente y visualmente atractiva para `origen_masterjob`, diseñada para que los administradores gestionen la economía empresarial del servidor de forma sencilla.
 
 ---
-*Created for the URP ecosystem. Design and Logic by Antigravity.*
+
+## 🚀 Paso 1: Instalación
+
+Para instalar el script correctamente, sigue estos pasos:
+
+1. **Descarga**: Asegúrate de tener la carpeta `urp_masterjob_admin` completa.
+2. **Ubicación**: Sube la carpeta a tu directorio de `resources` de FiveM.
+3. **Registro**: Abre tu archivo `server.cfg` y añade la siguiente línea:
+   ```cfg
+   ensure urp_masterjob_admin
+   ```
+4. **Dependencias**: El script requiere que tengas instalados y funcionando:
+   - `qb-core`
+   - `origen_masterjob`
+---
+
+## ⚙️ Paso 2: Configuración Personalizada
+
+Antes de iniciar el servidor, abre el archivo `config.lua` para ajustar el script a tus necesidades:
+
+- **Idioma (`Config.Locale`)**: Puedes elegir entre `'es'` (Español) o `'en'` (Inglés).
+- **Grupos Administrativos (`Config.AdminGroups`)**: Define qué rangos de QBCore pueden abrir el panel (por defecto: `admin` y `god`).
+- **Comando (`Config.OpenCommand`)**: Cambia el comando por defecto (`/adminnegocios`) si prefieres otro.
+
+---
+
+## 🛠️ Paso 3: Cómo Usar el Panel
+
+Una vez dentro del servidor y con los permisos adecuados, sigue este tutorial de uso:
+
+### 1. Abrir el Panel
+Escribe el comando en el chat:
+```
+/adminnegocios
+```
+Se abrirá una interfaz.
+
+### 2. Buscar un Negocio
+En la esquina superior derecha verás un buscador. Simplemente escribe el nombre del negocio o su ID para filtrar la lista instantáneamente.
+
+### 3. Verificar Estado
+Cada tarjeta de negocio muestra un indicador:
+- **VERDE (ABIERTO)**: Hay empleados trabajando en ese momento.
+- **ROJO (CERRADO)**: No hay nadie de servicio.
+
+### 4. Editar el Nombre
+Haz clic en el botón **EDITAR**. Aparecerá una ventana para que introduzcas el nuevo nombre comercial. Los cambios se guardan automáticamente en la base de datos de `origen_masterjob`.
+
+### 5. Eliminar un Negocio
+Si necesitas borrar un negocio por completo, usa el botón **ELIMINAR**. El sistema te pedirá confirmación y luego ejecutará la limpieza total del negocio, incluyendo sus datos internos.
+
+---
+
+## ❓ Preguntas Frecuentes
+
+**¿Dónde se guardan los nombres editados?**  
+Se guardan directamente en la tabla `origen_masterjob` de la propia script.
+
+**¿Puedo añadir más idiomas?**  
+Sí, simplemente añade una entrada nueva en `locales.lua` siguiendo el formato existente.
+---
