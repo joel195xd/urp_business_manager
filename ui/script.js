@@ -149,17 +149,17 @@ function URP_UpdateMoney(id, type, amount) {
     });
 }
 
-// Confirmar cambio en el modal
-document.getElementById('modal-confirm').addEventListener('click', function () {
+// Confirmar cambio de nombre en el modal
+document.getElementById('modal-confirm-name').addEventListener('click', function () {
     const newName = document.getElementById('modal-input').value;
     if (newName && editingBusinessId) {
         fetch(`https://${GetParentResourceName()}/URP_UpdateBusinessName`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: editingBusinessId, name: newName }) // Enviamos 'name' que el servidor mapeará a 'label'
+            body: JSON.stringify({ id: editingBusinessId, name: newName })
         });
-        document.getElementById('urp-modal-overlay').style.display = 'none';
-        editingBusinessId = null;
+        // No cerramos el modal aquí para que el usuario pueda seguir gestionando si quiere, 
+        // o podemos cerrarlo si prefieres. Por ahora lo dejamos abierto para seguir editando capital.
     }
 });
 

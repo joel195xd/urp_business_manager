@@ -297,13 +297,24 @@ body {
     border: 1px solid rgba(232, 67, 147, 0.5);
     border-radius: 12px;
     padding: 40px;
-    width: 500px;
+    width: 480px;
     max-width: 90vw;
     box-shadow: 0 0 80px rgba(0, 0, 0, 1), 0 0 30px rgba(232, 67, 147, 0.15);
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 25px;
     animation: slideUpModal 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.urp-modal h3 {
+    color: var(--color-accent);
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
 }
 
 @keyframes slideUpModal {
@@ -324,18 +335,26 @@ body {
     gap: 20px;
 }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.modal-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232, 67, 147, 0.2), transparent);
+    margin: 5px 0;
 }
 
 .input-group label {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 11px;
     text-transform: uppercase;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
 }
 
 .money-actions {

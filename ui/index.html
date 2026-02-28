@@ -29,27 +29,41 @@
         <!-- Custom Edit Modal -->
         <div id="urp-modal-overlay" class="modal-overlay" style="display: none;">
             <div class="urp-modal">
-                <h3 id="modal-title">Editar Nombre</h3>
+                <h3 id="modal-title">Gestión de Negocio</h3>
                 <div class="modal-body">
-                    <div class="input-group">
-                        <label>Nombre Comercial</label>
-                        <input type="text" id="modal-input" class="search-input" placeholder="Nuevo nombre...">
+                    <!-- Sección de Nombre -->
+                    <div class="modal-section">
+                        <div class="input-group">
+                            <label>Nombre Comercial</label>
+                            <input type="text" id="modal-input" class="search-input" placeholder="Nuevo nombre...">
+                        </div>
+                        <button id="modal-confirm-name" class="btn-action" style="margin-top: 10px; width: 100%;">
+                            <i class="fas fa-save"></i> Actualizar Nombre
+                        </button>
                     </div>
-                    <div class="input-group">
-                        <label>Dinero del Negocio</label>
-                        <div class="money-actions">
-                            <input type="number" id="modal-money-input" class="search-input" placeholder="Cantidad...">
-                            <div class="money-btns">
-                                <button id="modal-add-money" class="btn-mini"><i class="fas fa-plus"></i></button>
-                                <button id="modal-remove-money" class="btn-mini btn-delete"><i
-                                        class="fas fa-minus"></i></button>
+
+                    <div class="section-divider"></div>
+
+                    <!-- Sección de Capital -->
+                    <div class="modal-section">
+                        <div class="input-group">
+                            <label>Gestión de Capital</label>
+                            <div class="money-actions">
+                                <input type="number" id="modal-money-input" class="search-input"
+                                    placeholder="Cantidad...">
+                                <div class="money-btns">
+                                    <button id="modal-add-money" class="btn-mini"><i class="fas fa-plus"></i></button>
+                                    <button id="modal-remove-money" class="btn-mini btn-delete"><i
+                                            class="fas fa-minus"></i></button>
+                                </div>
                             </div>
                         </div>
+                        <p style="font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 8px;">* Usa + o - para
+                            modificar el capital actual.</p>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="modal-cancel" class="btn-action btn-delete">Cancelar</button>
-                    <button id="modal-confirm" class="btn-action">Confirmar</button>
+                    <button id="modal-cancel" class="btn-action btn-delete">Cerrar Gestión</button>
                 </div>
             </div>
         </div>
