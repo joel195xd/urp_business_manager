@@ -11,11 +11,19 @@ local function URP_GetBusinessList()
             -- Intentamos obtener las coordenadas si están disponibles en la data
             local coords = data.coords or data.location
 
+            local isOpen = false
+            if type(employeesOnDuty) == 'table' then
+                isOpen = #employeesOnDuty > 0
+            else
+                isOpen = (employeesOnDuty or 0) > 0
+            end
+
             table.insert(formatted, {
                 id = id,
                 name = data.name or id,
-                isOpen = employeesOnDuty > 0,
-                coords = coords
+                isOpen = isOpen,
+                coords = coords,
+                money = data.money or data.balance or 0
             })
         end
     end

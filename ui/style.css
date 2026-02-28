@@ -31,30 +31,45 @@ body {
 .urp-admin-dashboard {
     width: 60vw;
     height: 70vh;
-    background-color: rgba(18, 18, 18, 0.85);
+    background-color: rgba(18, 18, 18, 0.95);
     background-image:
         linear-gradient(rgba(232, 67, 147, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(232, 67, 147, 0.05) 1px, transparent 1px);
     background-size: 25px 25px;
     border-radius: 12px;
     border: 1px solid var(--border-color);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    backdrop-filter: blur(15px);
-    animation: fadeIn 0.4s ease-out;
+    animation: openAnim 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes fadeIn {
+.closing .urp-admin-dashboard {
+    animation: closeAnim 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes openAnim {
     from {
         opacity: 0;
-        transform: scale(0.95);
+        transform: scale(0.9) translateY(20px);
     }
 
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes closeAnim {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
     }
 }
 

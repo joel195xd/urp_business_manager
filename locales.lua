@@ -17,7 +17,14 @@ Locales['en'] = {
     ['confirm_delete'] = "Are you sure you want to delete the business \"%s\"? This action cannot be undone.",
     ['gps_btn'] = "GPS",
     ['player_panel_title'] = "Business List",
-    ['gps_set'] = "Waypoint set to business location."
+    ['gps_set'] = "Waypoint set to business location.",
+    ['cancel_btn'] = "Cancel",
+    ['confirm_btn'] = "Confirm",
+    ['balance_label'] = "Balance",
+    ['manage_btn'] = "Manage",
+    ['manage_title'] = "Business Management",
+    ['money_updated'] = "Money updated successfully.",
+    ['money_error'] = "Error updating money."
 }
 
 Locales['es'] = {
@@ -37,7 +44,14 @@ Locales['es'] = {
     ['confirm_delete'] = "¿Estás seguro de que deseas eliminar el negocio \"%s\"? Esta acción no se puede deshacer.",
     ['gps_btn'] = "GPS",
     ['player_panel_title'] = "Guía de Negocios",
-    ['gps_set'] = "Ubicación del negocio marcada en el GPS."
+    ['gps_set'] = "Ubicación del negocio marcada en el GPS.",
+    ['cancel_btn'] = "Cancelar",
+    ['confirm_btn'] = "Confirmar",
+    ['balance_label'] = "Capital",
+    ['manage_btn'] = "Gestionar",
+    ['manage_title'] = "Gestión de Negocio",
+    ['money_updated'] = "Dinero actualizado correctamente.",
+    ['money_error'] = "Error al actualizar el dinero."
 }
 
 function _U(str, ...)

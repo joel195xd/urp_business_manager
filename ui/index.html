@@ -25,6 +25,34 @@
                 <!-- Business cards will be injected here -->
             </main>
         </div>
+
+        <!-- Custom Edit Modal -->
+        <div id="urp-modal-overlay" class="modal-overlay" style="display: none;">
+            <div class="urp-modal">
+                <h3 id="modal-title">Editar Nombre</h3>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label>Nombre Comercial</label>
+                        <input type="text" id="modal-input" class="search-input" placeholder="Nuevo nombre...">
+                    </div>
+                    <div class="input-group">
+                        <label>Dinero del Negocio</label>
+                        <div class="money-actions">
+                            <input type="number" id="modal-money-input" class="search-input" placeholder="Cantidad...">
+                            <div class="money-btns">
+                                <button id="modal-add-money" class="btn-mini"><i class="fas fa-plus"></i></button>
+                                <button id="modal-remove-money" class="btn-mini btn-delete"><i
+                                        class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-cancel" class="btn-action btn-delete">Cancelar</button>
+                    <button id="modal-confirm" class="btn-action">Confirmar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
