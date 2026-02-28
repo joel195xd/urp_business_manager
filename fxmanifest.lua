@@ -5,6 +5,10 @@ author 'Dark'
 description 'Origen Masterjob Snippet'
 version '1.0.0'
 
+dependencies {
+    'oxmysql'
+}
+
 ui_page 'ui/index.html'
 
 client_scripts {

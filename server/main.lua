@@ -1,34 +1,47 @@
 local QBCore = exports['qb-core']:GetCoreObject()
+local MySQL = exports.oxmysql
 
 -- Obtiene la lista de negocios formateada
-local function URP_GetBusinessList()
+-- Obtiene la lista de negocios formateada
+local function URP_GetBusinessList(cb)
     local businesses = exports['origen_masterjob']:GetBusinesses()
-    local formatted = {}
 
-    if businesses then
-        for id, data in pairs(businesses) do
-            local employeesOnDuty = exports['origen_masterjob']:GetEmployeesOnDuty(id) or 0
-            -- Intentamos obtener las coordenadas si están disponibles en la data
-            local coords = data.coords or data.location
+    MySQL:query('SELECT id, money, label FROM origen_masterjob', {}, function(dbData)
+        local formatted = {}
+        local dbMap = {}
 
-            local isOpen = false
-            if type(employeesOnDuty) == 'table' then
-                isOpen = #employeesOnDuty > 0
-            else
-                isOpen = (employeesOnDuty or 0) > 0
+        if dbData then
+            for _, row in ipairs(dbData) do
+                dbMap[row.id] = row
             end
-
-            table.insert(formatted, {
-                id = id,
-                name = data.name or id,
-                isOpen = isOpen,
-                coords = coords,
-                money = data.money or data.balance or 0
-            })
         end
-    end
 
-    return formatted
+        if businesses then
+            for id, data in pairs(businesses) do
+                local employeesOnDuty = exports['origen_masterjob']:GetEmployeesOnDuty(id) or 0
+                local coords = data.coords or data.location
+
+                local isOpen = false
+                if data.open == 1 or data.open == true then
+                    isOpen = true
+                elseif type(employeesOnDuty) == 'table' then
+                    isOpen = #employeesOnDuty > 0
+                else
+                    isOpen = (tonumber(employeesOnDuty) or 0) > 0
+                end
+
+                local dbBiz = dbMap[id]
+                table.insert(formatted, {
+                    id = id,
+                    name = (dbBiz and dbBiz.label) or data.label or data.name or id,
+                    isOpen = isOpen,
+                    coords = coords,
+                    money = (dbBiz and dbBiz.money) or 0
+                })
+            end
+        end
+        if cb then cb(formatted) end
+    end)
 end
 
 -- Verifica permisos administrativa
@@ -50,37 +63,79 @@ RegisterNetEvent('URP_Masterjob:RequestBusinesses', function(isAdminRequest)
 
     if isAdminRequest then
         if HasPermission(src) then
-            local businesses = URP_GetBusinessList()
-            TriggerClientEvent('URP_Masterjob:OpenMenu', src, businesses)
+            URP_GetBusinessList(function(businesses)
+                TriggerClientEvent('URP_Masterjob:OpenMenu', src, businesses)
+            end)
         else
             TriggerClientEvent('URP_Masterjob:Notify', src, _U('no_permission'), "error")
         end
     else
-        -- Petición pública para jugadores
-        local businesses = URP_GetBusinessList()
-        TriggerClientEvent('URP_Masterjob:OpenMenu', src, businesses)
+        URP_GetBusinessList(function(businesses)
+            TriggerClientEvent('URP_Masterjob:OpenMenu', src, businesses)
+        end)
     end
 end)
 
--- Actualizar nombre del negocio
+-- Actualizar nombre del negocio (Usa 'label' en DB)
 RegisterNetEvent('URP_Masterjob:UpdateBusinessName', function(businessId, newName)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
 
     if not Player or not HasPermission(src) then return end
 
-    MySQL.Async.execute('UPDATE origen_masterjob SET name = @name WHERE business_id = @id', {
-        ['@name'] = newName,
-        ['@id'] = businessId
+    MySQL:update('UPDATE origen_masterjob SET label = ? WHERE id = ?', {
+        newName, businessId
     }, function(rowsChanged)
-        if rowsChanged > 0 then
+        if (tonumber(rowsChanged) or 0) > 0 then
             TriggerClientEvent('URP_Masterjob:Notify', src, _U('name_updated'), "success")
 
-            -- Refrescar lista para administradores
-            local businesses = URP_GetBusinessList()
-            TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
+            -- Refrescar lista para todos
+            URP_GetBusinessList(function(businesses)
+                TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
+            end)
         else
             TriggerClientEvent('URP_Masterjob:Notify', src, _U('name_error'), "error")
+        end
+    end)
+end)
+
+-- Actualizar dinero del negocio (Añadir/Quitar)
+RegisterNetEvent('URP_Masterjob:UpdateBusinessMoney', function(data)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+
+    if not Player or not HasPermission(src) or not data then return end
+
+    local bizId = data.id
+    local type = data.type
+    local amount = tonumber(data.amount)
+
+    if not bizId or not type or not amount or amount <= 0 then return end
+
+    -- Obtenemos el dinero actual primero para operar
+    MySQL:scalar('SELECT money FROM origen_masterjob WHERE id = ?', {
+        bizId
+    }, function(currentMoney)
+        if currentMoney ~= nil then
+            local newMoney = 0
+            if type == 'add' then
+                newMoney = currentMoney + amount
+            elseif type == 'remove' then
+                newMoney = math.max(0, currentMoney - amount)
+            end
+
+            MySQL:update('UPDATE origen_masterjob SET money = ? WHERE id = ?', {
+                newMoney, bizId
+            }, function(rowsChanged)
+                if (tonumber(rowsChanged) or 0) > 0 then
+                    TriggerClientEvent('URP_Masterjob:Notify', src, _U('money_updated'), "success")
+                    URP_GetBusinessList(function(businesses)
+                        TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
+                    end)
+                else
+                    TriggerClientEvent('URP_Masterjob:Notify', src, _U('money_error'), "error")
+                end
+            end)
         end
     end)
 end)
@@ -99,7 +154,8 @@ RegisterNetEvent('URP_Masterjob:DeleteBusiness', function(businessId)
 
     -- Refrescar lista
     SetTimeout(500, function()
-        local businesses = URP_GetBusinessList()
-        TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
+        URP_GetBusinessList(function(businesses)
+            TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
+        end)
     end)
 end)

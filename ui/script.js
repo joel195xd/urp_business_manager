@@ -144,6 +144,7 @@ document.getElementById('modal-remove-money').addEventListener('click', function
 function URP_UpdateMoney(id, type, amount) {
     fetch(`https://${GetParentResourceName()}/URP_UpdateBusinessMoney`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, type: type, amount: amount })
     });
 }
@@ -154,7 +155,8 @@ document.getElementById('modal-confirm').addEventListener('click', function () {
     if (newName && editingBusinessId) {
         fetch(`https://${GetParentResourceName()}/URP_UpdateBusinessName`, {
             method: 'POST',
-            body: JSON.stringify({ id: editingBusinessId, name: newName })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: editingBusinessId, name: newName }) // Enviamos 'name' que el servidor mapeará a 'label'
         });
         document.getElementById('urp-modal-overlay').style.display = 'none';
         editingBusinessId = null;
@@ -167,16 +169,32 @@ document.getElementById('modal-cancel').addEventListener('click', function () {
     editingBusinessId = null;
 });
 
+let deletingBusinessId = null;
+
 // Eliminar negocio
 function URP_DeleteBusiness(id, name) {
-    const confirmText = locales['confirm_delete'].replace('%s', name);
-    if (confirm(confirmText)) {
+    deletingBusinessId = id;
+    const confirmText = locales['confirm_delete'] ? locales['confirm_delete'].replace('%s', name) : `¿Estás seguro de que deseas eliminar ${name}?`;
+    document.getElementById('delete-modal-text').innerText = confirmText;
+    document.getElementById('urp-delete-modal-overlay').style.display = 'flex';
+}
+
+document.getElementById('delete-modal-confirm').addEventListener('click', function () {
+    if (deletingBusinessId) {
         fetch(`https://${GetParentResourceName()}/URP_DeleteBusiness`, {
             method: 'POST',
-            body: JSON.stringify({ id: id })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: deletingBusinessId })
         });
+        document.getElementById('urp-delete-modal-overlay').style.display = 'none';
+        deletingBusinessId = null;
     }
-}
+});
+
+document.getElementById('delete-modal-cancel').addEventListener('click', function () {
+    document.getElementById('urp-delete-modal-overlay').style.display = 'none';
+    deletingBusinessId = null;
+});
 
 // GPS Waypoint
 function URP_SetGPS(id) {

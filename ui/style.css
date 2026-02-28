@@ -252,3 +252,139 @@ body {
     background: var(--color-danger);
     border-color: var(--color-danger);
 }
+
+/* === REFINAMIENTOS DE UI === */
+.biz-balance {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 500;
+    margin-top: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(46, 204, 113, 0.12);
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.money-text {
+    color: #2ecc71;
+    font-weight: 800;
+    text-shadow: 0 0 8px rgba(46, 204, 113, 0.25);
+}
+
+/* === MODAL POPUP (FIXED POSITION) === */
+.modal-overlay {
+    position: fixed;
+    /* Fixed solves the 'to the right' issue */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    /* Solid background for FiveM NUI */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /* Ensure it stays on top */
+}
+
+.urp-modal {
+    background: #080808;
+    border: 1px solid rgba(232, 67, 147, 0.5);
+    border-radius: 12px;
+    padding: 40px;
+    width: 500px;
+    max-width: 90vw;
+    box-shadow: 0 0 80px rgba(0, 0, 0, 1), 0 0 30px rgba(232, 67, 147, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    animation: slideUpModal 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpModal {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input-group label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.money-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.money-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-mini {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--color-text);
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-mini i {
+    font-size: 16px;
+}
+
+.btn-mini:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 15px rgba(232, 67, 147, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-mini.btn-delete:hover {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
