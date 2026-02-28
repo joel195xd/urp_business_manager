@@ -1,5 +1,6 @@
 let businessData = [];
 let locales = {};
+let currentMode = 'admin';
 
 // Listener de mensajes NUI
 window.addEventListener('message', function (event) {
@@ -8,6 +9,7 @@ window.addEventListener('message', function (event) {
     if (data.type === 'URP_OPEN_DASHBOARD') {
         businessData = data.businesses;
         locales = data.translations;
+        currentMode = data.mode;
         applyTranslations();
         renderBusinesses(businessData);
         document.getElementById('urp-admin-root').style.display = 'flex';
@@ -19,7 +21,8 @@ window.addEventListener('message', function (event) {
 
 // Aplica traducciones recibidas
 function applyTranslations() {
-    document.querySelector('.dashboard-title').innerText = locales['panel_title'];
+    const title = currentMode === 'admin' ? locales['panel_title'] : locales['player_panel_title'];
+    document.querySelector('.dashboard-title').innerText = title;
     document.getElementById('business-search').placeholder = locales['search_placeholder'];
 }
 
@@ -36,6 +39,27 @@ function renderBusinesses(businesses) {
         const statusText = biz.isOpen ? locales['status_open'] : locales['status_closed'];
         const statusIcon = biz.isOpen ? 'fa-door-open' : 'fa-door-closed';
 
+        let actionButtons = '';
+        if (currentMode === 'admin') {
+            actionButtons = `
+                <button class="btn-action" onclick="URP_EditBusiness('${biz.id}', '${biz.name}')">
+                    <i class="fas fa-edit"></i> ${locales['edit_btn']}
+                </button>
+                <button class="btn-action btn-delete" onclick="URP_DeleteBusiness('${biz.id}', '${biz.name}')">
+                    <i class="fas fa-trash-alt"></i> ${locales['delete_btn']}
+                </button>
+            `;
+        } else {
+            // Modo jugador: botón GPS si hay coordenadas
+            if (biz.coords) {
+                actionButtons = `
+                    <button class="btn-action" onclick="URP_SetGPS('${biz.id}')">
+                        <i class="fas fa-location-arrow"></i> ${locales['gps_btn']}
+                    </button>
+                `;
+            }
+        }
+
         card.innerHTML = `
             <div class="biz-info">
                 <h3>${biz.name}</h3>
@@ -46,12 +70,7 @@ function renderBusinesses(businesses) {
                 </div>
             </div>
             <div class="actions">
-                <button class="btn-action" onclick="URP_EditBusiness('${biz.id}', '${biz.name}')">
-                    <i class="fas fa-edit"></i> ${locales['edit_btn']}
-                </button>
-                <button class="btn-action btn-delete" onclick="URP_DeleteBusiness('${biz.id}', '${biz.name}')">
-                    <i class="fas fa-trash-alt"></i> ${locales['delete_btn']}
-                </button>
+                ${actionButtons}
             </div>
         `;
         list.appendChild(card);
@@ -87,6 +106,17 @@ function URP_DeleteBusiness(id, name) {
         fetch(`https://${GetParentResourceName()}/URP_DeleteBusiness`, {
             method: 'POST',
             body: JSON.stringify({ id: id })
+        });
+    }
+}
+
+// GPS Waypoint
+function URP_SetGPS(id) {
+    const biz = businessData.find(b => b.id === id);
+    if (biz && biz.coords) {
+        fetch(`https://${GetParentResourceName()}/URP_SetGPS`, {
+            method: 'POST',
+            body: JSON.stringify({ coords: biz.coords })
         });
     }
 }

@@ -8,10 +8,14 @@ local function URP_GetBusinessList()
     if businesses then
         for id, data in pairs(businesses) do
             local employeesOnDuty = exports['origen_masterjob']:GetEmployeesOnDuty(id) or 0
+            -- Intentamos obtener las coordenadas si están disponibles en la data
+            local coords = data.coords or data.location
+
             table.insert(formatted, {
                 id = id,
                 name = data.name or id,
-                isOpen = employeesOnDuty > 0
+                isOpen = employeesOnDuty > 0,
+                coords = coords
             })
         end
     end
@@ -30,17 +34,23 @@ local function HasPermission(src)
 end
 
 -- Petición de negocios desde el cliente
-RegisterNetEvent('URP_Masterjob:RequestBusinesses', function()
+RegisterNetEvent('URP_Masterjob:RequestBusinesses', function(isAdminRequest)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
 
     if not Player then return end
 
-    if HasPermission(src) then
+    if isAdminRequest then
+        if HasPermission(src) then
+            local businesses = URP_GetBusinessList()
+            TriggerClientEvent('URP_Masterjob:OpenMenu', src, businesses)
+        else
+            TriggerClientEvent('URP_Masterjob:Notify', src, _U('no_permission'), "error")
+        end
+    else
+        -- Petición pública para jugadores
         local businesses = URP_GetBusinessList()
         TriggerClientEvent('URP_Masterjob:OpenMenu', src, businesses)
-    else
-        TriggerClientEvent('URP_Masterjob:Notify', src, _U('no_permission'), "error")
     end
 end)
 
@@ -51,7 +61,7 @@ RegisterNetEvent('URP_Masterjob:UpdateBusinessName', function(businessId, newNam
 
     if not Player or not HasPermission(src) then return end
 
-    MySQL.Async.execute('UPDATE ' .. Config.BusinessTable .. ' SET name = @name WHERE business_id = @id', {
+    MySQL.Async.execute('UPDATE origen_masterjob SET name = @name WHERE business_id = @id', {
         ['@name'] = newName,
         ['@id'] = businessId
     }, function(rowsChanged)
@@ -74,17 +84,14 @@ RegisterNetEvent('URP_Masterjob:DeleteBusiness', function(businessId)
 
     if not Player or not HasPermission(src) then return end
 
-    MySQL.Async.execute('DELETE FROM ' .. Config.BusinessTable .. ' WHERE business_id = @id', {
-        ['@id'] = businessId
-    }, function(rowsChanged)
-        if rowsChanged > 0 then
-            TriggerClientEvent('URP_Masterjob:Notify', src, _U('biz_deleted'), "success")
+    -- Usamos el comando de staff de origen_masterjob para asegurar limpieza total
+    ExecuteCommand('deletebusiness ' .. businessId)
 
-            -- Refrescar lista
-            local businesses = URP_GetBusinessList()
-            TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
-        else
-            TriggerClientEvent('URP_Masterjob:Notify', src, _U('delete_error'), "error")
-        end
+    TriggerClientEvent('URP_Masterjob:Notify', src, _U('biz_deleted'), "success")
+
+    -- Refrescar lista
+    SetTimeout(500, function()
+        local businesses = URP_GetBusinessList()
+        TriggerClientEvent('URP_Masterjob:RefreshList', -1, businesses)
     end)
 end)

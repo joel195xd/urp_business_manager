@@ -1,10 +1,21 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local isMenuOpen = false
+local currentMode = 'admin'
 
--- Comando para abrir el panel
+-- Comando para abrir el panel administrativo
 RegisterCommand(Config.OpenCommand, function()
-    TriggerServerEvent('URP_Masterjob:RequestBusinesses')
+    currentMode = 'admin'
+    TriggerServerEvent('URP_Masterjob:RequestBusinesses', true)
 end)
+
+-- Comando para abrir el panel de jugadores
+RegisterCommand(Config.PlayerCommand, function()
+    currentMode = 'player'
+    TriggerServerEvent('URP_Masterjob:RequestBusinesses', false)
+end)
+
+-- Keymapping para el panel de jugadores
+RegisterKeyMapping(Config.PlayerCommand, 'Abrir Guía de Negocios', 'keyboard', Config.PlayerKey)
 
 -- Abre el menú NUI con los datos
 RegisterNetEvent('URP_Masterjob:OpenMenu', function(businesses)
@@ -15,7 +26,8 @@ RegisterNetEvent('URP_Masterjob:OpenMenu', function(businesses)
     SendNUIMessage({
         type = 'URP_OPEN_DASHBOARD',
         businesses = businesses,
-        translations = Locales[Config.Locale]
+        translations = Locales[Config.Locale],
+        mode = currentMode
     })
 end)
 
@@ -41,6 +53,15 @@ RegisterNUICallback('URP_DeleteBusiness', function(data, cb)
     cb('ok')
 end)
 
+-- Callback para marcar GPS
+RegisterNUICallback('URP_SetGPS', function(data, cb)
+    if data.coords then
+        SetNewWaypoint(data.coords.x, data.coords.y)
+        QBCore.Functions.Notify(_U('gps_set'), "success")
+    end
+    cb('ok')
+end)
+
 -- Notificaciones del servidor
 RegisterNetEvent('URP_Masterjob:Notify', function(msg, type)
     QBCore.Functions.Notify(msg, type)
@@ -52,7 +73,8 @@ RegisterNetEvent('URP_Masterjob:RefreshList', function(businesses)
         SendNUIMessage({
             type = 'URP_OPEN_DASHBOARD',
             businesses = businesses,
-            translations = Locales[Config.Locale]
+            translations = Locales[Config.Locale],
+            mode = currentMode
         })
     end
 end)

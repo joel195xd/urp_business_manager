@@ -8,3 +8,5 @@ Config.AdminGroups = {
 }
 
 Config.OpenCommand = 'adminnegocios'
+Config.PlayerCommand = 'negocios'
+Config.PlayerKey = 'F10'

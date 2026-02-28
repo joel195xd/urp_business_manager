@@ -14,7 +14,10 @@ Locales['en'] = {
     ['edit_btn'] = "Edit",
     ['delete_btn'] = "Delete",
     ['prompt_new_name'] = "Enter new name for %s:",
-    ['confirm_delete'] = "Are you sure you want to delete the business \"%s\"? This action cannot be undone."
+    ['confirm_delete'] = "Are you sure you want to delete the business \"%s\"? This action cannot be undone.",
+    ['gps_btn'] = "GPS",
+    ['player_panel_title'] = "Business List",
+    ['gps_set'] = "Waypoint set to business location."
 }
 
 Locales['es'] = {
@@ -31,7 +34,10 @@ Locales['es'] = {
     ['edit_btn'] = "Editar",
     ['delete_btn'] = "Eliminar",
     ['prompt_new_name'] = "Introduce el nuevo nombre para %s:",
-    ['confirm_delete'] = "¿Estás seguro de que deseas eliminar el negocio \"%s\"? Esta acción no se puede deshacer."
+    ['confirm_delete'] = "¿Estás seguro de que deseas eliminar el negocio \"%s\"? Esta acción no se puede deshacer.",
+    ['gps_btn'] = "GPS",
+    ['player_panel_title'] = "Guía de Negocios",
+    ['gps_set'] = "Ubicación del negocio marcada en el GPS."
 }
 
 function _U(str, ...)
