@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URP - Admin Business Manager</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Config and Locales -->
+    <script src="config.js"></script>
+    <script src="locales/en.js"></script>
+    <script src="locales/es.js"></script>
+</head>
+
+<body>
+    <div class="urp-admin-dashboard">
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1 class="dashboard-title" id="ui-title">Business Administration</h1>
+                <p class="dashboard-subtitle" id="ui-subtitle">Control and Oversight Panel</p>
+            </div>
+            <div class="header-right">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="biz-search" class="search-filter"
+                        placeholder="Search business by name or ID...">
+                </div>
+            </div>
+        </header>
+
+        <!-- STATS BAR (Optional but premium) -->
+        <div class="dashboard-stats">
+            <div class="stat-item">
+                <span class="stat-label" id="ui-total-biz-label">Total Businesses</span>
+                <span class="stat-value" id="total-biz">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label" id="ui-open-biz-label">Open Now</span>
+                <span class="stat-value accent" id="open-biz">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label" id="ui-total-money-label">Total Economy</span>
+                <span class="stat-value" id="total-money">$0</span>
+            </div>
+        </div>
+
+        <!-- MAIN LIST -->
+        <main class="business-list" id="business-container">
+            <!-- Items injected by JS -->
+            <div class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Loading businesses...</span>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL EDIT -->
+    <div class="urp-modal-overlay" id="edit-modal">
+        <div class="urp-modal">
+            <div class="modal-header">
+                <h2 id="ui-modal-edit-title">Edit Business Name</h2>
+                <button class="close-modal" id="close-edit"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="edit-label" id="ui-label-new-name">New Label</label>
+                    <input type="text" id="edit-label" class="urp-input" placeholder="Enter new business name...">
+                </div>
+                <input type="hidden" id="edit-biz-id">
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn cancel" id="ui-btn-cancel-edit">Cancel</button>
+                <button class="action-btn save" id="ui-btn-save">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DELETE CONFIRM -->
+    <div class="urp-modal-overlay" id="delete-modal">
+        <div class="urp-modal danger">
+            <div class="modal-header">
+                <h2 id="ui-modal-delete-title">Confirm Deletion</h2>
+                <button class="close-modal" id="close-delete"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="ui-delete-warning-text">Are you sure you want to delete <span id="delete-biz-name"
+                        class="highlight">this business</span>?</p>
+                <p class="warning-text" id="ui-delete-irreversible">This action is irreversible and will remove all
+                    associated data.</p>
+                <input type="hidden" id="delete-biz-id">
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn cancel" id="ui-btn-cancel-delete">Cancel</button>
+                <button class="action-btn delete-confirm" id="ui-btn-confirm-delete">Delete Permanently</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
